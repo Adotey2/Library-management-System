@@ -1,4 +1,5 @@
 package services;
+
 import models.Borrower;
 import java.util.*;
 import java.io.*;
@@ -59,5 +60,9 @@ public class BorrowerService {
 
     public void saveOnExit() {
         saveBorrowersToFile();
+    }
+
+    public HashMap<String, Borrower> getAllBorrowers() {
+        return borrowers;
     }
 }

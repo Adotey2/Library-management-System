@@ -1,9 +1,10 @@
 package services;
-import models.Book;                 
+
+import models.Book;
 import structures.CategoryTree;
 import java.util.*;
 import java.io.*;
-import utils.FileHandler;;
+import utils.FileHandler;
 
 public class InventoryService {
     private CategoryTree tree = new CategoryTree();
@@ -60,5 +61,9 @@ public class InventoryService {
         } catch (IOException e) {
             System.out.println("Failed to save books.");
         }
+    }
+
+    public CategoryTree getTree() {
+        return tree;
     }
 }

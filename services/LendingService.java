@@ -1,4 +1,5 @@
 package services;
+
 import models.Transaction;
 import structures.Queue;
 import java.util.*;
@@ -69,5 +70,9 @@ public class LendingService {
         } catch (IOException e) {
             System.out.println("Failed to save transactions.");
         }
+    }
+
+    public List<Transaction> getAllTransactions() {
+        return allTransactions;
     }
 }

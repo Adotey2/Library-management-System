@@ -1,6 +1,9 @@
+// === Main.java ===
 import services.InventoryService;
 import services.BorrowerService;
 import services.LendingService;
+import services.ReportService;
+
 import java.util.Scanner;
 
 public class Main {
@@ -18,6 +21,7 @@ public class Main {
             System.out.println("4. Borrow Book");
             System.out.println("5. Return Book");
             System.out.println("6. Exit");
+            System.out.println("7. Reports & Analysis");
 
             int choice = scanner.nextInt();
             scanner.nextLine();
@@ -28,7 +32,18 @@ public class Main {
                 case 3 -> borrowerService.registerBorrower(scanner);
                 case 4 -> lendingService.borrowBook(scanner);
                 case 5 -> lendingService.returnBook(scanner);
-                case 6 -> System.exit(0);
+                case 6 -> {
+                    borrowerService.saveOnExit();
+                    System.exit(0);
+                }
+                case 7 -> {
+                    ReportService.mostBorrowedBooksLastMonth(lendingService.getAllTransactions());
+                    ReportService.topFinedBorrowers(borrowerService.getAllBorrowers());
+                    inventory.getTree().printInventoryDistribution();
+                    ReportService.flagOverdues(lendingService.getAllTransactions(), borrowerService.getAllBorrowers());
+                    borrowerService.saveOnExit();
+                    ReportService.algorithmPerformanceNotes();
+                }
                 default -> System.out.println("Invalid choice.");
             }
         }

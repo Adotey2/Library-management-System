@@ -1,5 +1,7 @@
 package structures;
+
 import models.Book;
+
 public class CategoryTree {
     private TreeNode root;
 
@@ -29,6 +31,19 @@ public class CategoryTree {
             listRec(node.left);
             for (Book b : node.books) System.out.println(b);
             listRec(node.right);
+        }
+    }
+
+    public void printInventoryDistribution() {
+        System.out.println("Inventory Distribution by Category:");
+        printDistribution(root);
+    }
+
+    private void printDistribution(TreeNode node) {
+        if (node != null) {
+            printDistribution(node.left);
+            System.out.println(node.category + ": " + node.books.size() + " book(s)");
+            printDistribution(node.right);
         }
     }
 }
