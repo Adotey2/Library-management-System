@@ -24,6 +24,7 @@ public class Main {
             System.out.println("8. Search Book");
             System.out.println("9. Sort Books");
             System.out.println("10. Filter Books by Category");
+            System.out.println("11. Remove Book");
 
             int choice = scanner.nextInt();
             scanner.nextLine();
@@ -49,6 +50,8 @@ public class Main {
                 case 8 -> inventory.searchBooks(scanner);
                 case 9 -> inventory.sortBooks(scanner);
                 case 10 -> inventory.filterByCategory(scanner);
+                case 11 -> inventory.removeBookByISBN(scanner);
+
                 default -> System.out.println("Invalid choice.");
             }
         }

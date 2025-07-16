@@ -31,8 +31,32 @@ public class InventoryService {
         saveBooksToFile();
     }
 
+    public void removeBookByISBN(Scanner scanner) {
+        System.out.print("Enter ISBN to remove: ");
+        String isbn = scanner.nextLine();
+        boolean removed = false;
+
+        Iterator<Book> iterator = allBooks.iterator();
+        while (iterator.hasNext()) {
+            Book b = iterator.next();
+            if (b.isbn.equalsIgnoreCase(isbn)) {
+                iterator.remove();
+                tree.remove(b); // Tree update (requires implementation in CategoryTree)
+                removed = true;
+                break;
+            }
+        }
+
+        if (removed) {
+            saveBooksToFile();
+            System.out.println("Book removed successfully.");
+        } else {
+            System.out.println("Book not found.");
+        }
+    }
+
     public void listBooks() {
-        tree.listBooks();
+        tree.getAllBooks();
     }
 
     public void searchBooks(Scanner scanner) {
@@ -64,7 +88,7 @@ public class InventoryService {
     public void filterByCategory(Scanner scanner) {
         System.out.print("Enter category to filter: ");
         String category = scanner.nextLine();
-        tree.listBooksByCategory(category);
+        tree.getBooksByCategory(category);
     }
 
     private void loadBooksFromFile() {

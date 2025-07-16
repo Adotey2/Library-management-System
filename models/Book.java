@@ -21,4 +21,8 @@ public class Book {
     public String toString() {
         return title + "," + author + "," + isbn + "," + category + "," + year + "," + publisher + "," + shelfLocation;
     }
+    public String getIsbn() {
+        return isbn;
+    }
+    
 }

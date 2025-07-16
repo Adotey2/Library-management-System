@@ -1,68 +1,88 @@
 package structures;
 
 import models.Book;
+
 import java.util.*;
 
 public class CategoryTree {
     private TreeNode root;
 
+    public CategoryTree() {
+        this.root = new TreeNode("Library");
+    }
+
     public void insert(Book book) {
-        root = insertRec(root, book);
+        insertCategory(book.getCategory()).addBook(book);
     }
 
-    private TreeNode insertRec(TreeNode node, Book book) {
-        if (node == null) {
-            node = new TreeNode(book.getCategory());
-            node.books.add(book);
-            return node;
+    public TreeNode insertCategory(String category) {
+        for (TreeNode node : root.children) {
+            if (node.category.equalsIgnoreCase(category)) {
+                return node;
+            }
         }
-        int cmp = book.getCategory().compareToIgnoreCase(node.category);
-        if (cmp == 0) node.books.add(book);
-        else if (cmp < 0) node.left = insertRec(node.left, book);
-        else node.right = insertRec(node.right, book);
-        return node;
+        TreeNode newCategory = new TreeNode(category);
+        root.children.add(newCategory);
+        return newCategory;
     }
 
-    public void listBooks() {
-        listRec(root);
+    public List<Book> getAllBooks() {
+        List<Book> all = new ArrayList<>();
+        for (TreeNode node : root.children) {
+            all.addAll(node.books);
+        }
+        return all;
     }
 
-    private void listRec(TreeNode node) {
-        if (node != null) {
-            listRec(node.left);
-            for (Book b : node.books) System.out.println(b);
-            listRec(node.right);
+    public List<Book> getBooksByCategory(String category) {
+        for (TreeNode node : root.children) {
+            if (node.category.equalsIgnoreCase(category)) {
+                return node.books;
+            }
+        }
+        return new ArrayList<>();
+    }
+
+    public void displayCategories() {
+        for (TreeNode node : root.children) {
+            System.out.println("- " + node.category);
         }
     }
 
-    public void listBooksByCategory(String category) {
-        TreeNode node = searchCategory(root, category);
-        if (node != null) {
-            System.out.println("Books under category: " + category);
-            for (Book b : node.books) System.out.println(b);
-        } else {
-            System.out.println("No books found in that category.");
+    public void remove(Book book) {
+        Iterator<TreeNode> it = root.children.iterator();
+        while (it.hasNext()) {
+            TreeNode node = it.next();
+            if (node.category.equalsIgnoreCase(book.getCategory())) {
+                node.books.removeIf(b -> b.getIsbn().equals(book.getIsbn()));
+                if (node.books.isEmpty()) {
+                    it.remove(); // remove category if empty
+                }
+                break;
+            }
         }
     }
 
-    private TreeNode searchCategory(TreeNode node, String category) {
-        if (node == null) return null;
-        int cmp = category.compareToIgnoreCase(node.category);
-        if (cmp == 0) return node;
-        else if (cmp < 0) return searchCategory(node.left, category);
-        else return searchCategory(node.right, category);
-    }
+    public static class TreeNode {
+        String category;
+        List<Book> books;
+        List<TreeNode> children;
 
+        public TreeNode(String category) {
+            this.category = category;
+            this.books = new ArrayList<>();
+            this.children = new ArrayList<>();
+        }
+
+        public void addBook(Book book) {
+            books.add(book);
+        }
+    }
     public void printInventoryDistribution() {
         System.out.println("Inventory Distribution by Category:");
-        printDistribution(root);
-    }
-
-    private void printDistribution(TreeNode node) {
-        if (node != null) {
-            printDistribution(node.left);
+        for (TreeNode node : root.children) {
             System.out.println(node.category + ": " + node.books.size() + " book(s)");
-            printDistribution(node.right);
         }
     }
+    
 }
