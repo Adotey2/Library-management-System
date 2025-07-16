@@ -1,7 +1,8 @@
 package models;
+
 public class Book {
-    String title, author, isbn, category, publisher, shelfLocation;
-    int year;
+    public String title, author, isbn, category, publisher, shelfLocation;
+    public int year;
 
     public Book(String title, String author, String isbn, String category, int year, String publisher, String shelfLocation) {
         this.title = title;
@@ -16,7 +17,7 @@ public class Book {
     public String getCategory() {
         return category;
     }
-    
+
     public String toString() {
         return title + "," + author + "," + isbn + "," + category + "," + year + "," + publisher + "," + shelfLocation;
     }

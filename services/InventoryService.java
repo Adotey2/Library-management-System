@@ -2,6 +2,7 @@ package services;
 
 import models.Book;
 import structures.CategoryTree;
+import structures.Sorter;
 import java.util.*;
 import java.io.*;
 import utils.FileHandler;
@@ -32,6 +33,38 @@ public class InventoryService {
 
     public void listBooks() {
         tree.listBooks();
+    }
+
+    public void searchBooks(Scanner scanner) {
+        System.out.println("Search by: 1. Title 2. Author 3. ISBN");
+        int opt = scanner.nextInt(); scanner.nextLine();
+        System.out.print("Enter search term: ");
+        String term = scanner.nextLine();
+        boolean found = false;
+        for (Book b : allBooks) {
+            if ((opt == 1 && b.title.equalsIgnoreCase(term)) ||
+                (opt == 2 && b.author.equalsIgnoreCase(term)) ||
+                (opt == 3 && b.isbn.equalsIgnoreCase(term))) {
+                System.out.println(b);
+                found = true;
+            }
+        }
+        if (!found) System.out.println("No matching book found.");
+    }
+
+    public void sortBooks(Scanner scanner) {
+        System.out.println("Sort by: 1. Title 2. Year");
+        int opt = scanner.nextInt(); scanner.nextLine();
+        List<Book> sorted;
+        if (opt == 1) sorted = Sorter.mergeSortByTitle(new ArrayList<>(allBooks));
+        else sorted = Sorter.mergeSortByYear(new ArrayList<>(allBooks));
+        sorted.forEach(System.out::println);
+    }
+
+    public void filterByCategory(Scanner scanner) {
+        System.out.print("Enter category to filter: ");
+        String category = scanner.nextLine();
+        tree.listBooksByCategory(category);
     }
 
     private void loadBooksFromFile() {

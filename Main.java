@@ -1,4 +1,3 @@
-// === Main.java ===
 import services.InventoryService;
 import services.BorrowerService;
 import services.LendingService;
@@ -22,6 +21,9 @@ public class Main {
             System.out.println("5. Return Book");
             System.out.println("6. Exit");
             System.out.println("7. Reports & Analysis");
+            System.out.println("8. Search Book");
+            System.out.println("9. Sort Books");
+            System.out.println("10. Filter Books by Category");
 
             int choice = scanner.nextInt();
             scanner.nextLine();
@@ -44,6 +46,9 @@ public class Main {
                     borrowerService.saveOnExit();
                     ReportService.algorithmPerformanceNotes();
                 }
+                case 8 -> inventory.searchBooks(scanner);
+                case 9 -> inventory.sortBooks(scanner);
+                case 10 -> inventory.filterByCategory(scanner);
                 default -> System.out.println("Invalid choice.");
             }
         }

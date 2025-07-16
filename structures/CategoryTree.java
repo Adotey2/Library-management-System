@@ -1,6 +1,7 @@
 package structures;
 
 import models.Book;
+import java.util.*;
 
 public class CategoryTree {
     private TreeNode root;
@@ -32,6 +33,24 @@ public class CategoryTree {
             for (Book b : node.books) System.out.println(b);
             listRec(node.right);
         }
+    }
+
+    public void listBooksByCategory(String category) {
+        TreeNode node = searchCategory(root, category);
+        if (node != null) {
+            System.out.println("Books under category: " + category);
+            for (Book b : node.books) System.out.println(b);
+        } else {
+            System.out.println("No books found in that category.");
+        }
+    }
+
+    private TreeNode searchCategory(TreeNode node, String category) {
+        if (node == null) return null;
+        int cmp = category.compareToIgnoreCase(node.category);
+        if (cmp == 0) return node;
+        else if (cmp < 0) return searchCategory(node.left, category);
+        else return searchCategory(node.right, category);
     }
 
     public void printInventoryDistribution() {
