@@ -1,4 +1,10 @@
-,,,,0.0
-leslie,1234,0606060,,0.0
-djij,74586,969696969,,0.0
-gygyugyu,223444,yfuu,,0.0
+Kwame Mensah,BR001,kwame.mensah@gmail.com,9789988754345,0.0
+Akosua Boateng,BR002,akosua.boateng@yahoo.com,,0.0
+Yaw Adu,BR003,yaw.adu@outlook.com,,0.0
+Afia Owusu,BR004,afia.owusu@gmail.com,9789988854900,4.0
+Kofi Agyekum,BR005,kofi.agyekum@ashmail.com,,0.0
+Ama Serwaa,BR006,ama.serwaa@gmail.com,9789988854917,0.0
+Kojo Asante,BR007,kojo.asante@stud.ug.edu.gh,,0.0
+Esi Appiah,BR008,esi.appiah@gmail.com,9789988555002,0.0
+Kwabena Owusu,BR009,kwabena.owusu@yahoo.com,9780143123713,4.0
+Abena Nkrumah,BR010,abena.nkrumah@gmail.com,,0.0
