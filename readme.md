@@ -1,137 +1,206 @@
-books: //title,author,isbn,category,year,publisher,shelfLocation
-borrowers: //name,id,contact,borrowedBooks,fine
-transactions; isbn,borrowerId,borrowDate,returnDate,isReturned
+# Library Management System
 
-# Comprehensive Library Management System Overview
+## Data File Structures
 
-## 1. Book Management Process
+### Books Structure
 
-### Adding a New Book
-1. **Process**: When a librarian adds a new book:
-   - Book data is collected (title, author, ISBN, etc.)
-   - A `Book` model object is created
-   - The book is inserted into the appropriate category
-   - Book details are written to `books.txt`
+```
+title,author,isbn,category,year,publisher,shelfLocation
+```
 
-2. **Data Structures Used**:
-   - **CategoryTree**: The main organizational structure
-     ```java
-     // Example: Adding a new book to the system
-     CategoryTree library = new CategoryTree();
-     Book newBook = new Book("Things Fall Apart", "Chinua Achebe", "9780385474542", "Fiction", 1958);
-     library.insert(newBook); // Automatically places book in the Fiction category
-     ```
-   - **TreeNode**: Stores books within their category
-     ```java
-     // TreeNode stores books and maintains category structure
-     public TreeNode(String category) {
-         this.category = category;
-         this.books = new ArrayList<>();  // This collection holds all books in this category
-     }
-     ```
+### Borrowers Structure
 
-### Book Categorization
-1. **Process**: Books are automatically organized by category:
-   - When inserting a book, the system checks if its category exists
-   - If not, a new category node is created
-   - The book is added to the appropriate category node
+```
+name,id,contact,borrowedBooks,fine
+```
 
-2. **Data Structures Used**:
-   - **CategoryTree** maintains a hierarchy of categories with the "Library" as the root
-   - **TreeNode** handles both binary tree operations and category management
+### Transactions Structure
 
-## 2. Book Discovery Process
+```
+isbn,borrowerId,borrowDate,returnDate,isReturned
+```
 
-### Searching and Sorting Books
-1. **Process**: When a user searches for books:
-   - Books can be retrieved by category
-   - Results can be sorted by different criteria
+---
 
-2. **Data Structures Used**:
-   - **CategoryTree** for category-based retrieval:
-     ```java
-     List<Book> fictionBooks = library.getBooksByCategory("Fiction");
-     ```
-   - **Sorter** for organizing results using merge sort:
-     ```java
-     // Sort books by publication year
-     List<Book> chronologicalBooks = Sorter.mergeSortByYear(allBooks);
-     
-     // Sort books alphabetically by title
-     List<Book> alphabeticalBooks = Sorter.mergeSortByTitle(allBooks);
-     ```
-     
-3. **How Merge Sort Works**:
-   - Divides the book list into halves recursively
-   - Sorts each half independently
-   - Merges sorted halves back together
-   - Achieves O(n log n) performance, efficient for large collections
+# System Overview
 
-## 3. Borrowing Process
+## 1. Adding Books
 
-1. **Process**: When a user borrows a book:
-   - System confirms book availability
-   - Creates transaction record linking book (ISBN) to borrower (ID)
-   - Updates borrower record with borrowed book
-   - Records transaction with current date and return deadline
+**Process**:
 
-2. **Files Updated**:
-   - `transactions.txt`: New entry with ISBN, borrower ID, borrow date
-   - `borrowers.txt`: Updated to include borrowed book ISBN
+* Create `Book` object with title, author, ISBN, category
+* Insert book into `CategoryTree` under correct category
+* Save book data to `books.txt` file
 
-3. **Data Structures Used**:
-   - **Queue**: For processing multiple borrowing requests sequentially
-     ```java
-     Queue<BorrowRequest> borrowQueue = new Queue<>();
-     borrowQueue.enqueue(new BorrowRequest(bookId, borrowerId));
-     
-     while (!borrowQueue.isEmpty()) {
-         BorrowRequest request = borrowQueue.dequeue();
-         // Process the borrowing request
-     }
-     ```
+**Files Used**: `CategoryTree.java`, `TreeNode.java`, `Book.java`
+**Files Changed**: `Data/books.txt`
 
-## 4. Return and Fine Management Process
+**Data Structures**:
 
-1. **Process**: When a book is returned:
-   - System finds the transaction record
-   - Calculates days overdue (if any)
-   - Assesses fines based on overdue days
-   - Updates borrower's fine balance
-   - Marks transaction as returned
+* **CategoryTree**: Organizes books by subject categories
 
-2. **Files Updated**:
-   - `transactions.txt`: Updated with return date and status
-   - `borrowers.txt`: Updated fine amount and removed book from borrowed list
+  ```java
+  // Example: Adding a new book to the system
+  CategoryTree library = new CategoryTree();
+  Book newBook = new Book("Things Fall Apart", "Chinua Achebe", "9780385474542", "Fiction", 1958);
+  library.insert(newBook); // Automatically places book in the Fiction category
+  ```
+* **TreeNode**: Stores all books within one category
 
-3. **Data Structures Used**:
-   - **LinkedList**: For maintaining dynamic collections like fine records
-     ```java
-     // Example of tracking overdue books with LinkedList
-     LinkedList<Transaction> overdueBooks = new LinkedList<>();
-     // Add overdue transactions to the list
-     // Process each overdue item
-     overdueBooks.printAll(); // Display all overdue items
-     ```
+  ```java
+  // TreeNode stores books and maintains category structure
+  public TreeNode(String category) {
+      this.category = category;
+      this.books = new ArrayList<>();  // This collection holds all books in this category
+  }
+  ```
 
-## 5. Inventory Management Process
+---
 
-1. **Process**: For library inventory reports:
-   - System traverses the category tree
-   - Counts books by category
-   - Generates distribution statistics
+## 2. Finding Books
 
-2. **Data Structures Used**:
-   - **CategoryTree** for hierarchical organization:
-     ```java
-     // Generate inventory distribution report
-     library.printInventoryDistribution();
-     ```
+**Process**:
 
-This library system demonstrates effective use of appropriate data structures for different operations:
-- Trees for hierarchical organization
-- Sorting algorithms for efficient searching
-- Queues for sequential processing
-- Linked lists for dynamic collections
+* Search books by category using `CategoryTree`
+* Sort results by title or year using `Sorter` class
 
-The combination of these structures with the file-based persistence layer creates a complete library management solution.
+**Files Used**: `CategoryTree.java`, `Sorter.java`
+**Files Changed**: None
+
+**Data Structures**:
+
+* **CategoryTree**: Quick category-based search
+
+  ```java
+  List<Book> fictionBooks = library.getBooksByCategory("Fiction");
+  ```
+* **Merge Sort**: Sorts large book lists efficiently
+
+  ```java
+  // Sort books by publication year
+  List<Book> chronologicalBooks = Sorter.mergeSortByYear(allBooks);
+
+  // Sort books alphabetically by title
+  List<Book> alphabeticalBooks = Sorter.mergeSortByTitle(allBooks);
+  ```
+
+---
+
+## 3. Borrowing Books
+
+**Process**:
+
+* Check if book is available
+* Create transaction linking book to borrower
+* Update borrower record with borrowed book
+* Set return deadline
+
+**Files Used**: `Queue.java`, `Transaction.java`, `Borrower.java`
+**Files Changed**: `Data/transactions.txt`, `Data/borrowers.txt`
+
+**Data Structures**:
+
+* **Queue**: Processes borrowing requests in order
+
+  ```java
+  Queue<BorrowRequest> borrowQueue = new Queue<>();
+  borrowQueue.enqueue(new BorrowRequest(bookId, borrowerId));
+
+  while (!borrowQueue.isEmpty()) {
+      BorrowRequest request = borrowQueue.dequeue();
+      // Process the borrowing request
+  }
+  ```
+
+---
+
+## 4. Returning Books
+
+**Process**:
+
+* Find transaction record
+* Calculate overdue days
+* Add fines if book is late
+* Mark transaction as complete
+
+**Files Used**: `LinkedList.java`, `Transaction.java`
+**Files Changed**: `Data/transactions.txt`, `Data/borrowers.txt`
+
+**Data Structures**:
+
+* **LinkedList**: Tracks overdue books and fines
+
+  ```java
+  // Example of tracking overdue books with LinkedList
+  LinkedList<Transaction> overdueBooks = new LinkedList<>();
+  // Add overdue transactions to the list
+  // Process each overdue item
+  overdueBooks.printAll(); // Display all overdue items
+  ```
+
+---
+
+## 5. Reports
+
+**Process**:
+
+* Count books in each category
+* Generate inventory statistics
+
+**Files Used**: `CategoryTree.java`
+**Files Changed**: None
+
+**Data Structures**:
+
+* **CategoryTree**: For structured inventory analysis
+
+  ```java
+  // Generate inventory distribution report
+  library.printInventoryDistribution();
+  ```
+
+---
+
+## Data Structures Explained
+
+### CategoryTree
+
+* Organizes books into categories like Fiction, Science, etc.
+* Fast access to books by category
+* Better than searching through all books one by one
+
+### TreeNode
+
+* Holds all books in one category
+* Stores category name and book list together
+
+### Merge Sort
+
+* Divides book list in half repeatedly
+* Sorts each half separately
+* Combines sorted halves back together
+* Works well for large numbers of books
+
+### Queue
+
+* First request gets processed first
+* Ensures fair order for borrowing requests
+* Prevents newer requests from skipping ahead
+
+### LinkedList
+
+* Grows and shrinks as needed
+* Good for collections that change size often
+* Used for tracking fines and overdue books
+
+---
+
+## Why These Structures
+
+* **CategoryTree**: Fast category searches instead of checking every book
+* **Merge Sort**: Reliable sorting performance for any size collection
+* **Queue**: Fair processing order for user requests
+* **LinkedList**: Flexible size for unpredictable data like fines
+* **File Storage**: Simple data saving without complex databases
+
+Each structure solves a specific problem in the library system efficiently.
